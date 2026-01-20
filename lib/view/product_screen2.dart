@@ -1,0 +1,221 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import '../controller/controller.dart';
+import '../model/model.dart';
+import '../routes/app_routs.dart';
+
+class Productdetails extends StatefulWidget {
+  final Data data;
+  const Productdetails({super.key, required this.data});
+
+  @override
+  State<Productdetails> createState() => _ProductdetailsState();
+}
+
+class _ProductdetailsState extends State<Productdetails> {
+  late String _currentStatus;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentStatus = widget.data.orderStatus ?? 'Pending';
+  }
+
+  
+  void _showStatusUpdateDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Update Delivery Status'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: DeliveryStatus.all.map((status) {
+            return RadioListTile<String>(
+              title: Text(status),
+              value: status,
+              groupValue: _currentStatus,
+              onChanged: (value) {
+                if (value != null) {
+                  setState(() => _currentStatus = value);
+                  Navigator.pop(context);
+                  _updateStatus(value);
+                }
+              },
+            );
+          }).toList(),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  
+  void _updateStatus(String newStatus) {
+    context.read<ProductController>().updateOrderStatus(
+          widget.data.orderid!,
+          newStatus,
+        );
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Status updated to: $newStatus'),
+        backgroundColor: Colors.green,
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Order Details"),
+        actions: [
+         
+          IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: _showStatusUpdateDialog,
+            tooltip: 'Update Status',
+          ),
+        ],
+      ),
+      backgroundColor: Colors.white,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 40),
+              child: Center(
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Container(
+                      height: 400,
+                      width: 400,
+                      decoration: const BoxDecoration(
+                        color: Colors.blueGrey,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    Container(
+                      height: 350,
+                      width: 350,
+                      decoration: const BoxDecoration(
+                        color: Colors.yellow,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    Container(
+                      height: 300,
+                      width: 300,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.black12),
+                        image: DecorationImage(
+                          image: NetworkImage(widget.data.productImage ?? ''),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  height: 500,
+                  width: 400,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Colors.black12),
+                  ),
+                ),
+                Container(
+                  height: 450,
+                  width: 350,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 10,
+                        offset: Offset(0, 6),
+                      ),
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildDetailRow('Order ID', widget.data.orderid ?? ''),
+                        _buildDetailRow('Customer', widget.data.customername ?? ''),
+                        _buildDetailRow('Address', widget.data.address ?? ''),
+                        // ✅ ADD: Delivery agent info
+                        _buildDetailRow('Delivery Agent', widget.data.deliveryAgent ?? 'Not assigned'),
+                        _buildDetailRow('Product', widget.data.productName ?? ''),
+                        _buildDetailRow('Platform', widget.data.platform ?? ''),
+                        _buildDetailRow('Amount', '₹${widget.data.amount}'),
+                        // ✅ CHANGED: Status with update button
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _buildDetailRow('Status', _currentStatus),
+                            ),
+                            ElevatedButton.icon(
+                              onPressed: _showStatusUpdateDialog,
+                              icon: const Icon(Icons.edit, size: 16),
+                              label: const Text('Update'),
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => context.pushNamed(Approute.mappage),
+        shape: const CircleBorder(side: BorderSide(color: Colors.black12)),
+        child: const Icon(Icons.map),
+      ),
+    );
+  }
+
+  Widget _buildDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: RichText(
+        text: TextSpan(
+          style: const TextStyle(fontSize: 16, color: Colors.black87),
+          children: [
+            TextSpan(
+              text: '$label: ',
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            TextSpan(text: value),
+          ],
+        ),
+      ),
+    );
+  }
+}
