@@ -5,16 +5,15 @@ import '../services/product_service.dart';
 
 class ProductController extends ChangeNotifier {
   bool isLoading = false;
-  String? errorMessage; // ✅ ADD: Error handling
+  String? errorMessage; 
+  
 
   ResponseListProduct? _productList;
   ResponseListProduct? get productList => _productList;
 
-  // ✅ ADD: Filter state
   String _selectedFilter = 'All';
   String get selectedFilter => _selectedFilter;
 
-  // ✅ ADD: Get filtered orders
   List<Data>? get filteredOrders {
     if (_productList?.data == null) return null;
     if (_selectedFilter == 'All') return _productList!.data;
@@ -24,7 +23,6 @@ class ProductController extends ChangeNotifier {
         .toList();
   }
 
-  // ✅ ADD: Update filter
   void setFilter(String filter) {
     _selectedFilter = filter;
     notifyListeners();
@@ -39,17 +37,15 @@ class ProductController extends ChangeNotifier {
     try {
       final response = await getproduct();
       _productList = response;
-      debugPrint("✅ Loaded ${response.data?.length ?? 0} orders");
+      debugPrint(" Loaded ${response.data?.length ?? 0} orders");
     } catch (e) {
-      debugPrint("❌ API Error: $e");
+      debugPrint(" API Error: $e");
       errorMessage = "Failed to load orders. Please try again.";
     } finally {
       isLoading = false;
       notifyListeners();
     }
   }
-
-  // ✅ ADD: Update order status locally
   void updateOrderStatus(String orderId, String newStatus) {
     if (_productList?.data == null) return;
 
@@ -62,19 +58,16 @@ class ProductController extends ChangeNotifier {
         orderStatus: newStatus,
       );
       notifyListeners();
-      debugPrint("✅ Order $orderId updated to: $newStatus");
+      debugPrint(" Order $orderId updated to: $newStatus");
     }
   }
-
-  // Google Maps markers
   final Map<String, Marker> _markers = {};
   Set<Marker> get markers => _markers.values.toSet();
 
-  // ✅ IMPROVED: Update agent location with order info
   void updateAgentLocation(String agentId, double lat, double lng) {
     // Find the order for this agent
     final order = _productList?.data?.firstWhere(
-      (o) => o.agentId == agentId,
+      (o) => o.agentid == agentId,
       orElse: () => Data(),
     );
 
@@ -82,7 +75,7 @@ class ProductController extends ChangeNotifier {
       markerId: MarkerId(agentId),
       position: LatLng(lat, lng),
       infoWindow: InfoWindow(
-        title: order?.deliveryAgent ?? 'Agent $agentId',
+        title: order?.deliveryagent ?? 'Agent $agentId',
         snippet: order?.customername != null 
             ? 'Delivering to ${order!.customername}' 
             : 'No active delivery',

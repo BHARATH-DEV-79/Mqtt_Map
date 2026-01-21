@@ -37,20 +37,11 @@ class _HomepageState extends State<Homepage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Delivery Orders"),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.map),
-            onPressed: () => context.pushNamed(Approute.mappage),
-            tooltip: 'View Map',
-          ),
-        ],
       ),
       body: Column(
         children: [
           // FILTER CHIPS
           _buildFilterChips(controller),
-
-          // ERROR MESSAGE
           if (controller.errorMessage != null)
             Container(
               padding: const EdgeInsets.all(12),
@@ -124,7 +115,7 @@ class _HomepageState extends State<Homepage> {
                                 orderId: order.orderid ?? '',
                                 customerName: order.customername ?? '',
                                 orderStatus: order.orderStatus ?? 'Pending',
-                                deliveryAgent: order.deliveryAgent ?? 'N/A',
+                                deliveryAgent: order.deliveryagent ?? 'N/A',
                               ),
                             );
                           },

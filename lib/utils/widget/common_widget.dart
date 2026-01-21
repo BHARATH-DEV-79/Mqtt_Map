@@ -7,7 +7,6 @@ class ProductCard extends StatelessWidget {
   final String productName;
   final String platform;
 
-  // 🔥 NEW DATA
   final String orderId;
   final String customerName;
   final String orderStatus;
@@ -22,7 +21,6 @@ class ProductCard extends StatelessWidget {
     required this.productName,
     required this.platform,
 
-    // new
     required this.orderId,
     required this.customerName,
     required this.orderStatus,
@@ -44,7 +42,7 @@ class ProductCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 🖼 IMAGE (OLD)
+     
             Expanded(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(14),
@@ -62,7 +60,6 @@ class ProductCard extends StatelessWidget {
 
             const SizedBox(height: 8),
 
-            // 💰 AMOUNT (OLD)
             Center(
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
@@ -83,7 +80,6 @@ class ProductCard extends StatelessWidget {
 
             const SizedBox(height: 8),
 
-            // 📦 PRODUCT NAME (OLD)
             Text(
               productName,
               maxLines: 1,
@@ -94,15 +90,13 @@ class ProductCard extends StatelessWidget {
               ),
             ),
 
-            // 🏷 PLATFORM (OLD)
             Text(
               platform,
               style: const TextStyle(color: Colors.white70, fontSize: 12),
             ),
 
             const Divider(color: Colors.white30),
-
-            // 🆕 NEW DETAILS
+          
             Text(
               'Order #$orderId',
               style: const TextStyle(color: Colors.white, fontSize: 12),
@@ -119,8 +113,6 @@ class ProductCard extends StatelessWidget {
             ),
 
             const SizedBox(height: 6),
-
-            // 🟢 STATUS CHIP (NEW)
             _StatusChip(status: orderStatus),
           ],
         ),
@@ -160,6 +152,42 @@ class _StatusChip extends StatelessWidget {
       child: Text(
         status,
         style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+}
+
+
+class CommonDetailRow extends StatelessWidget {
+  final String label;
+  final String value;
+
+  const CommonDetailRow({
+    super.key,
+    required this.label,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: RichText(
+        text: TextSpan(
+          style: const TextStyle(
+            fontSize: 16,
+            color: Colors.black87,
+          ),
+          children: [
+            TextSpan(
+              text: '$label: ',
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            TextSpan(
+              text: value,
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -30,11 +30,8 @@ class Data {
   String? productImage;
   String? orderStatus;
   int? amount;
-  
-  // ✅ Computed properties - no API changes needed
-  String? get deliveryAgent => _generateAgentName();
-  String? get agentId => _generateAgentId();
-
+  String? deliveryagent;
+  String? agentid;
   Data({
     this.orderid,
     this.platform,
@@ -44,6 +41,8 @@ class Data {
     this.productImage,
     this.orderStatus,
     this.amount,
+    this.deliveryagent,
+    this.agentid,
   });
 
   Data.fromJson(Map<String, dynamic> json) {
@@ -55,6 +54,8 @@ class Data {
     productImage = json['productImage'];
     orderStatus = json['orderStatus'];
     amount = json['amount'];
+    deliveryagent = json['deliveryagent'];
+    agentid = json['agentid'];
   }
 
   Map<String, dynamic> toJson() {
@@ -67,31 +68,10 @@ class Data {
       'productImage': productImage,
       'orderStatus': orderStatus,
       'amount': amount,
+      'deliveryagent': deliveryagent,
+      'agentid': agentid
     };
   }
-
-  // ✅ Generate agent name from customer name or order ID
-  String _generateAgentName() {
-    if (customername != null && customername!.isNotEmpty) {
-      // Use first word of customer name as agent name
-      final words = customername!.split(' ');
-      return 'Agent ${words.first}';
-    }
-    // Fallback to order ID
-    return 'Agent ${orderid?.substring(0, 3) ?? 'XXX'}';
-  }
-
-  // ✅ Generate consistent agent ID from order ID
-  String _generateAgentId() {
-    if (orderid != null && orderid!.isNotEmpty) {
-      // Use order ID hash to create agent ID
-      final hash = orderid!.hashCode.abs() % 10; // Agent 0-9
-      return 'agent_00$hash';
-    }
-    return 'agent_001'; // Default fallback
-  }
-
-  // ✅ Copy method for updating status locally
   Data copyWith({
     String? orderid,
     String? platform,
@@ -114,9 +94,6 @@ class Data {
     );
   }
 }
-
-
-// ✅ Delivery status constants
 class DeliveryStatus {
   static const String pending = 'Pending';
   static const String inTransit = 'In Transit';

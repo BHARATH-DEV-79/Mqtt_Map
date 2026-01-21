@@ -22,7 +22,6 @@ class _MapPageState extends State<MapPage> {
     _connectMqtt();
   }
 
-  // ✅ IMPROVED: Connect with error handling
   Future<void> _connectMqtt() async {
     setState(() {
       _isConnecting = true;
@@ -67,11 +66,10 @@ class _MapPageState extends State<MapPage> {
     final mapController = context.watch<ProductController>();
 
     return Scaffold(
-      // ✅ ADD: AppBar with back button
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('Live Agent Tracking'),
         actions: [
-          // ✅ ADD: Connection status indicator
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Center(
@@ -98,10 +96,9 @@ class _MapPageState extends State<MapPage> {
       ),
       body: Stack(
         children: [
-          // Google Map
           GoogleMap(
             initialCameraPosition: const CameraPosition(
-              target: LatLng(12.9716, 77.5946), // Bangalore
+              target: LatLng(12.9716, 77.5946), 
               zoom: 12,
             ),
             markers: mapController.markers,
@@ -110,8 +107,6 @@ class _MapPageState extends State<MapPage> {
             zoomControlsEnabled: true,
             mapType: MapType.normal,
           ),
-
-          // ✅ ADD: Loading indicator
           if (_isConnecting)
             Container(
               color: Colors.black54,
@@ -131,8 +126,6 @@ class _MapPageState extends State<MapPage> {
                 ),
               ),
             ),
-
-          // ✅ ADD: Error banner
           if (_errorMessage != null)
             Positioned(
               top: 0,
@@ -165,8 +158,6 @@ class _MapPageState extends State<MapPage> {
                 ),
               ),
             ),
-
-          // ✅ ADD: Agent count badge
           if (mapController.markers.isNotEmpty)
             Positioned(
               bottom: 80,
@@ -195,18 +186,17 @@ class _MapPageState extends State<MapPage> {
             ),
         ],
       ),
-      // ✅ ADD: Test location button (for development)
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _sendTestLocation,
-        icon: const Icon(Icons.pin_drop),
-        label: const Text('Test Location'),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 100),
+        child: FloatingActionButton.extended(
+          onPressed: _sendTestLocation,
+          icon: const Icon(Icons.pin_drop),
+          label: const Text('Test Location'),
+        ),
       ),
     );
   }
-
-  // ✅ ADD: Test location publisher
   void _sendTestLocation() {
-    // Send test location for agent_001
     mqttService.publishTestLocation(
       'agent_001',
       12.9716 + (DateTime.now().second % 10) * 0.001,

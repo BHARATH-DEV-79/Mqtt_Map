@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../controller/controller.dart';
 import '../model/model.dart';
 import '../routes/app_routs.dart';
+import '../utils/widget/common_widget.dart';
 
 class Productdetails extends StatefulWidget {
   final Data data;
@@ -22,7 +23,6 @@ class _ProductdetailsState extends State<Productdetails> {
     _currentStatus = widget.data.orderStatus ?? 'Pending';
   }
 
-  
   void _showStatusUpdateDialog() {
     showDialog(
       context: context,
@@ -55,12 +55,11 @@ class _ProductdetailsState extends State<Productdetails> {
     );
   }
 
-  
   void _updateStatus(String newStatus) {
     context.read<ProductController>().updateOrderStatus(
-          widget.data.orderid!,
-          newStatus,
-        );
+      widget.data.orderid!,
+      newStatus,
+    );
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -77,7 +76,6 @@ class _ProductdetailsState extends State<Productdetails> {
       appBar: AppBar(
         title: const Text("Order Details"),
         actions: [
-         
           IconButton(
             icon: const Icon(Icons.edit),
             onPressed: _showStatusUpdateDialog,
@@ -160,26 +158,51 @@ class _ProductdetailsState extends State<Productdetails> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildDetailRow('Order ID', widget.data.orderid ?? ''),
-                        _buildDetailRow('Customer', widget.data.customername ?? ''),
-                        _buildDetailRow('Address', widget.data.address ?? ''),
-                        // ✅ ADD: Delivery agent info
-                        _buildDetailRow('Delivery Agent', widget.data.deliveryAgent ?? 'Not assigned'),
-                        _buildDetailRow('Product', widget.data.productName ?? ''),
-                        _buildDetailRow('Platform', widget.data.platform ?? ''),
-                        _buildDetailRow('Amount', '₹${widget.data.amount}'),
-                        // ✅ CHANGED: Status with update button
+                        CommonDetailRow(
+                          label: 'Order ID',
+                          value: widget.data.orderid ?? '',
+                        ),
+                        CommonDetailRow(
+                          label: 'Customer',
+                          value: widget.data.customername ?? '',
+                        ),
+                        CommonDetailRow(
+                          label: 'Address',
+                          value: widget.data.address ?? '',
+                        ),
+                        CommonDetailRow(
+                          label: 'Delivery Agent',
+                          value: widget.data.deliveryagent ?? 'Not assigned',
+                        ),
+                        CommonDetailRow(
+                          label: 'Product',
+                          value: widget.data.productName ?? '',
+                        ),
+                        CommonDetailRow(
+                          label: 'Platform',
+                          value: widget.data.platform ?? '',
+                        ),
+                        CommonDetailRow(
+                          label: 'Amount',
+                          value: '₹${widget.data.amount}',
+                        ),
                         Row(
                           children: [
                             Expanded(
-                              child: _buildDetailRow('Status', _currentStatus),
+                              child: CommonDetailRow(
+                                label: 'Status',
+                               value: _currentStatus,
+                              ),
                             ),
                             ElevatedButton.icon(
                               onPressed: _showStatusUpdateDialog,
                               icon: const Icon(Icons.edit, size: 16),
                               label: const Text('Update'),
                               style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 8,
+                                ),
                               ),
                             ),
                           ],
@@ -197,24 +220,6 @@ class _ProductdetailsState extends State<Productdetails> {
         onPressed: () => context.pushNamed(Approute.mappage),
         shape: const CircleBorder(side: BorderSide(color: Colors.black12)),
         child: const Icon(Icons.map),
-      ),
-    );
-  }
-
-  Widget _buildDetailRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: RichText(
-        text: TextSpan(
-          style: const TextStyle(fontSize: 16, color: Colors.black87),
-          children: [
-            TextSpan(
-              text: '$label: ',
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            TextSpan(text: value),
-          ],
-        ),
       ),
     );
   }

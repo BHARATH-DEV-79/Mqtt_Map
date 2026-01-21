@@ -11,13 +11,12 @@ import '../utils/api_service.dart';
 // }
 Future<ResponseListProduct> getproduct() async {
   try {
-    // ✅ Use your existing ApiService.get method
     return await ApiService.get(
       path: ApiEndPoints.productList,
       fromJson: (json) => ResponseListProduct.fromJson(json),
     );
   } catch (e) {
-    print('❌ getproduct error: $e');
-    rethrow; // Let controller handle the error
+    print(' getproduct error: $e');
+    rethrow; 
   }
 }
