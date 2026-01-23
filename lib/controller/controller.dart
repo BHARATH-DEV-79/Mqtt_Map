@@ -5,8 +5,7 @@ import '../services/product_service.dart';
 
 class ProductController extends ChangeNotifier {
   bool isLoading = false;
-  String? errorMessage; 
-  
+  String? errorMessage;
 
   ResponseListProduct? _productList;
   ResponseListProduct? get productList => _productList;
@@ -17,7 +16,7 @@ class ProductController extends ChangeNotifier {
   List<Data>? get filteredOrders {
     if (_productList?.data == null) return null;
     if (_selectedFilter == 'All') return _productList!.data;
-    
+
     return _productList!.data!
         .where((order) => order.orderStatus == _selectedFilter)
         .toList();
@@ -46,28 +45,29 @@ class ProductController extends ChangeNotifier {
       notifyListeners();
     }
   }
+
   void updateOrderStatus(String orderId, String newStatus) {
     if (_productList?.data == null) return;
 
     final index = _productList!.data!.indexWhere(
-      (order) => order.orderid == orderId,
+      (order) => order.orderId == orderId,
     );
 
     if (index != -1) {
-      _productList!.data![index] = _productList!.data![index].copyWith(
-        orderStatus: newStatus,
-      );
+      _productList!.data![index].orderStatus = newStatus;
       notifyListeners();
+
       debugPrint(" Order $orderId updated to: $newStatus");
     }
   }
+
   final Map<String, Marker> _markers = {};
   Set<Marker> get markers => _markers.values.toSet();
 
   void updateAgentLocation(String agentId, double lat, double lng) {
     // Find the order for this agent
     final order = _productList?.data?.firstWhere(
-      (o) => o.agentid == agentId,
+      (o) => o.agantid == agentId,
       orElse: () => Data(),
     );
 
@@ -76,13 +76,13 @@ class ProductController extends ChangeNotifier {
       position: LatLng(lat, lng),
       infoWindow: InfoWindow(
         title: order?.deliveryagent ?? 'Agent $agentId',
-        snippet: order?.customername != null 
-            ? 'Delivering to ${order!.customername}' 
+        snippet: order?.customerName != null
+            ? 'Delivering to ${order!.customerName}'
             : 'No active delivery',
       ),
       icon: BitmapDescriptor.defaultMarkerWithHue(
-        order?.orderStatus == 'Delivered' 
-            ? BitmapDescriptor.hueGreen 
+        order?.orderStatus == 'Delivered'
+            ? BitmapDescriptor.hueGreen
             : BitmapDescriptor.hueRed,
       ),
     );

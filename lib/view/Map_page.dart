@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:product_api/controller/controller.dart';
+import 'package:product_api/utils/constant/app_colors.dart';
 import 'package:provider/provider.dart';
 import '../services/mqtt_service.dart';
 
@@ -160,7 +161,7 @@ class _MapPageState extends State<MapPage> {
             ),
           if (mapController.markers.isNotEmpty)
             Positioned(
-              bottom: 80,
+              top: 16,
               right: 16,
               child: Material(
                 elevation: 4,
@@ -173,7 +174,7 @@ class _MapPageState extends State<MapPage> {
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.delivery_dining, color: Colors.blue),
+                      const Icon(Icons.delivery_dining, color: Orders.red),
                       const SizedBox(width: 8),
                       Text(
                         '${mapController.markers.length} Active Agents',
@@ -187,11 +188,11 @@ class _MapPageState extends State<MapPage> {
         ],
       ),
       floatingActionButton: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 100),
-        child: FloatingActionButton.extended(
+        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 120),
+        child: FloatingActionButton(
           onPressed: _sendTestLocation,
-          icon: const Icon(Icons.pin_drop),
-          label: const Text('Test Location'),
+           child: const Icon(Icons.pin_drop, color: Appcolors.primary),
+          backgroundColor: Appcolors.background,
         ),
       ),
     );

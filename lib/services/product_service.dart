@@ -2,7 +2,7 @@
 import '../model/model.dart';
 
 import '../routes/api_points.dart';
-import '../utils/api_service.dart';
+import '../utils/apis/api_service.dart';
 
 
 // Future<ResponseListProduct> getproduct () async{

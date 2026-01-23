@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'controller/controller.dart';
 import 'routes/app_pages.dart';
+import 'utils/constant/app_colors.dart';
 
 
 void main() async {
@@ -21,6 +22,12 @@ class Mainclass extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ProductController()),
       ],
       child: MaterialApp.router(
+        theme: ThemeData(
+          appBarTheme: const AppBarTheme(
+            color: Appcolors.background,
+            surfaceTintColor: Appcolors.background,
+          )
+        ),
         debugShowCheckedModeBanner: false,
         routerConfig: AppPages.routes,
       ),

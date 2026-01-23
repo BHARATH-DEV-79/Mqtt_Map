@@ -6,7 +6,7 @@ typedef LocationCallback = void Function(String agentId, double lat, double lng)
 typedef ErrorCallback = void Function(String error);
 
 class MqttService {
-  late MqttServerClient _client;
+  late MqttServerClient client;
   bool _isConnected = false;
   
   bool get isConnected => _isConnected;
@@ -15,53 +15,53 @@ class MqttService {
     LocationCallback onLocationUpdate, {
     ErrorCallback? onError,
   }) async {
-    _client = MqttServerClient(
+    client = MqttServerClient(
       'broker.hivemq.com',
       'flutter_delivery_${DateTime.now().millisecondsSinceEpoch}',
     );
 
-    _client.port = 1883;
-    _client.keepAlivePeriod = 20;
-    _client.logging(on: false);
-    _client.autoReconnect = true; 
+    client.port = 1883;
+    client.keepAlivePeriod = 20;
+    client.logging(on: false);
+    client.autoReconnect = true; 
 
-    _client.onConnected = () {
+    client.onConnected = () {
       print('MQTT Connected');
       _isConnected = true;
-      _client.subscribe('delivery/agents/location', MqttQos.atLeastOnce);
+      client.subscribe('delivery/agents/location', MqttQos.atLeastOnce);
     };
 
-    _client.onDisconnected = () {
+    client.onDisconnected = () {
       print('MQTT Disconnected');
       _isConnected = false;
       onError?.call('MQTT connection lost. Attempting to reconnect...');
     };
 
-    _client.onSubscribed = (topic) {
+    client.onSubscribed = (topic) {
       print(' Subscribed to: $topic');
     };
 
 
-    _client.onAutoReconnect = () {
+    client.onAutoReconnect = () {
       print(' MQTT Auto-reconnecting...');
     };
 
-    _client.onAutoReconnected = () {
+    client.onAutoReconnected = () {
       print('MQTT Auto-reconnected');
       _isConnected = true;
-      _client.subscribe('delivery/agents/location', MqttQos.atLeastOnce);
+      client.subscribe('delivery/agents/location', MqttQos.atLeastOnce);
     };
 
     try {
-      await _client.connect();
+      await client.connect();
     } catch (e) {
       print('MQTT Connection Error: $e');
       onError?.call('Failed to connect to MQTT broker: $e');
-      _client.disconnect();
+      client.disconnect();
       return;
     }
 
-    _client.updates!.listen(
+    client.updates!.listen(
       (events) {
         final recMessage = events[0].payload as MqttPublishMessage;
         final payload = MqttPublishPayload.bytesToStringAsString(
@@ -109,7 +109,7 @@ class MqttService {
       'timestamp': DateTime.now().toIso8601String(),
     }));
 
-    _client.publishMessage(
+    client.publishMessage(
       'delivery/agents/location',
       MqttQos.atLeastOnce,
       builder.payload!,
@@ -117,7 +117,7 @@ class MqttService {
   }
 
   void disconnect() {
-    _client.disconnect();
+    client.disconnect();
     _isConnected = false;
   }
 }

@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:product_api/routes/api_points.dart';
 
-import '../storage/app_storage.dart';
-import 'api_execption.dart';
+import '../../storage/app_storage.dart';
+import '../apis/api_execption.dart';
 
 
 class DioClient {

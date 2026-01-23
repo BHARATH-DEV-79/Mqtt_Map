@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../constant/app_colors.dart';
+
 class ProductCard extends StatelessWidget {
   final String imageUrl;
   final String amount;
@@ -26,7 +28,7 @@ class ProductCard extends StatelessWidget {
     required this.orderStatus,
     required this.deliveryAgent,
 
-    this.cardColor = Colors.purple,
+    this.cardColor = Appcolors.primary,
   });
 
   @override
@@ -64,14 +66,14 @@ class ProductCard extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white),
+                  border: Border.all(color: Appcolors.background, width: 2),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
                   amount,
                   style: const TextStyle(
                     fontSize: 16,
-                    color: Colors.white,
+                    color: Orders.yellow,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -85,35 +87,35 @@ class ProductCard extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
-                color: Colors.white,
+                color: Appcolors.text,
                 fontWeight: FontWeight.w600,
               ),
             ),
 
             Text(
               platform,
-              style: const TextStyle(color: Colors.white70, fontSize: 12),
+              style: const TextStyle(color: Appcolors.text, fontSize: 12),
             ),
 
             const Divider(color: Colors.white30),
           
             Text(
               'Order #$orderId',
-              style: const TextStyle(color: Colors.white, fontSize: 12),
+              style: const TextStyle(color: Appcolors.text, fontSize: 12),
             ),
             Text(
               'Customer: $customerName',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(color: Colors.white70, fontSize: 12),
+              style: const TextStyle(color: Appcolors.text, fontSize: 12),
             ),
             Text(
               'Agent: $deliveryAgent',
-              style: const TextStyle(color: Colors.white70, fontSize: 12),
+              style: const TextStyle(color: Appcolors.text, fontSize: 12),
             ),
 
             const SizedBox(height: 6),
-            _StatusChip(status: orderStatus),
+            StatusChip(status: orderStatus),
           ],
         ),
       ),
@@ -121,25 +123,25 @@ class ProductCard extends StatelessWidget {
   }
 }
 
-class _StatusChip extends StatelessWidget {
+class StatusChip extends StatelessWidget {
   final String status;
-  const _StatusChip({required this.status});
+  const StatusChip({required this.status});
 
   @override
   Widget build(BuildContext context) {
     Color color;
     switch (status) {
       case 'Delivered':
-        color = Colors.green;
+        color = Orders.green;
         break;
       case 'In Transit':
-        color = Colors.orange;
+        color = Orders.orange;
         break;
       case 'Cancelled':
-        color = Colors.red;
+        color = Orders.red;
         break;
       default:
-        color = Colors.grey;
+        color = Orders.grey;
     }
 
     return Container(
@@ -176,7 +178,7 @@ class CommonDetailRow extends StatelessWidget {
         text: TextSpan(
           style: const TextStyle(
             fontSize: 16,
-            color: Colors.black87,
+            color: Appcolors.text,
           ),
           children: [
             TextSpan(

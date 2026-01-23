@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:product_api/utils/apis/api_error.dart';
 
-import 'api_error.dart';
+
 
 class DioErrorHandler {
   static ApiError handle(DioException error) {

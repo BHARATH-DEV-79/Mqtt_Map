@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../controller/controller.dart';
 import '../model/model.dart';
 import '../routes/app_routs.dart';
+import '../utils/constant/app_colors.dart';
 import '../utils/widget/common_widget.dart';
 
 class Productdetails extends StatefulWidget {
@@ -56,10 +57,22 @@ class _ProductdetailsState extends State<Productdetails> {
   }
 
   void _updateStatus(String newStatus) {
-    context.read<ProductController>().updateOrderStatus(
-      widget.data.orderid!,
-      newStatus,
+  final orderId = widget.data.orderId;
+
+  if (orderId == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Order ID is missing'),
+        backgroundColor: Colors.red,
+      ),
     );
+    return;
+  }
+
+  context.read<ProductController>().updateOrderStatus(
+    orderId,
+    newStatus,
+  );
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -74,12 +87,16 @@ class _ProductdetailsState extends State<Productdetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Order Details"),
+        title: const Text("Order Details",style: TextStyle(color: Appcolors.primary),),
         actions: [
           IconButton(
-            icon: const Icon(Icons.edit),
+            icon: const Icon(Icons.edit,color: Appcolors.primary,size: 27,),
             onPressed: _showStatusUpdateDialog,
             tooltip: 'Update Status',
+          ),
+          IconButton(
+            icon: const Icon(Icons.location_on, color: Appcolors.primary,size: 27,),
+           onPressed: () => context.pushNamed(Approute.mappage),
           ),
         ],
       ),
@@ -133,7 +150,7 @@ class _ProductdetailsState extends State<Productdetails> {
                   height: 500,
                   width: 400,
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
+                    color: Appcolors.text2,
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(color: Colors.black12),
                   ),
@@ -142,11 +159,11 @@ class _ProductdetailsState extends State<Productdetails> {
                   height: 450,
                   width: 350,
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
+                    color: Colors.blueGrey,
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: const [
                       BoxShadow(
-                        color: Colors.black26,
+                        color: Appcolors.primary,
                         blurRadius: 10,
                         offset: Offset(0, 6),
                       ),
@@ -160,11 +177,11 @@ class _ProductdetailsState extends State<Productdetails> {
                       children: [
                         CommonDetailRow(
                           label: 'Order ID',
-                          value: widget.data.orderid ?? '',
+                          value: widget.data.agantid ?? '',
                         ),
                         CommonDetailRow(
                           label: 'Customer',
-                          value: widget.data.customername ?? '',
+                          value: widget.data.customerName ?? '',
                         ),
                         CommonDetailRow(
                           label: 'Address',
@@ -196,9 +213,10 @@ class _ProductdetailsState extends State<Productdetails> {
                             ),
                             ElevatedButton.icon(
                               onPressed: _showStatusUpdateDialog,
-                              icon: const Icon(Icons.edit, size: 16),
-                              label: const Text('Update'),
-                              style: ElevatedButton.styleFrom(
+                              icon: const Icon(Icons.edit, size: 16,color: Appcolors.primary,),
+                              label: const Text('Update',style: TextStyle(color: Appcolors.primary),),
+                              style: ElevatedButton.styleFrom(  side: BorderSide(color: Appcolors.primary),
+                                backgroundColor: Appcolors.background,
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 12,
                                   vertical: 8,
@@ -217,9 +235,10 @@ class _ProductdetailsState extends State<Productdetails> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Appcolors.background,
         onPressed: () => context.pushNamed(Approute.mappage),
         shape: const CircleBorder(side: BorderSide(color: Colors.black12)),
-        child: const Icon(Icons.map),
+        child: const Icon(Icons.location_on, color: Appcolors.primary,size: 35,),
       ),
     );
   }

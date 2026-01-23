@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:product_api/utils/constant/app_colors.dart';
 import 'package:provider/provider.dart';
 
 import '../controller/controller.dart';
@@ -36,12 +37,14 @@ class _HomepageState extends State<Homepage> {
 
     return Scaffold(
       appBar: AppBar(
+        
         title: const Text("Delivery Orders"),
       ),
+      backgroundColor: Appcolors.background,
       body: Column(
         children: [
           // FILTER CHIPS
-          _buildFilterChips(controller),
+          FilterChips(controller),
           if (controller.errorMessage != null)
             Container(
               padding: const EdgeInsets.all(12),
@@ -112,8 +115,8 @@ class _HomepageState extends State<Homepage> {
                                 amount: '₹${order.amount ?? 0}',
                                 productName: order.productName ?? '',
                                 platform: order.platform ?? '',
-                                orderId: order.orderid ?? '',
-                                customerName: order.customername ?? '',
+                                orderId: order.orderId ?? '',
+                                customerName: order.customerName ?? '',
                                 orderStatus: order.orderStatus ?? 'Pending',
                                 deliveryAgent: order.deliveryagent ?? 'N/A',
                               ),
@@ -127,7 +130,7 @@ class _HomepageState extends State<Homepage> {
     );
   }
 
-  Widget _buildFilterChips(ProductController controller) {
+  Widget FilterChips(ProductController controller) {
     final filters = ['All', ...DeliveryStatus.all];
 
     return Container(
